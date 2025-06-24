@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌤️ Weather Forecast</title>
+
+  <style>
+    @media (max-width: 1024px) {
+      input[type="text"] {
+        width: 260px;
+        font-size: 15px;
+      }
+
+      #cityWeather {
+        width: 320px;
+        padding: 25px;
+      }
+
+      #cityWeather h3 {
+        font-size: 24px;
+      }
+
+      #cityWeather p {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+
+      header,
+      footer {
+        font-size: 16px;
+        padding: 15px;
+      }
+
+      nav a {
+        display: block;
+        margin: 8px 0;
+        text-align: center;
+      }
+
+      section {
+        padding: 30px 15px 0;
+      }
+
+      input[type="text"] {
+        width: 90%;
+        max-width: 300px;
+      }
+
+      #cityWeather {
+        width: 90%;
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+
+      header,
+      footer {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      input[type="text"] {
+        font-size: 14px;
+        padding: 10px;
+      }
+
+      button {
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+
+      #cityWeather h3 {
+        font-size: 20px;
+      }
+
+      #cityWeather p {
+        font-size: 15px;
+      }
+
+      #cityWeather img {
+        width: 60px;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #dbefff, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #1e88e5;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav a {
+      margin: 0 15px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      padding-top: 40px;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 300px;
+      border: 2px solid #90caf9;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      background: #e3f2fd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background: #1976d2;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0d47a1;
+    }
+
+    #cityWeather {
+      margin-top: 30px;
+      background: linear-gradient(to bottom right, #bbdefb, #e3f2fd);
+      padding: 30px;
+      border-radius: 15px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    #cityWeather img {
+      width: 80px;
+      animation: slideIn 1s ease forwards;
+    }
+
+    #cityWeather h3 {
+      margin-top: 10px;
+      font-size: 28px;
+    }
+
+    #cityWeather p {
+      font-size: 18px;
+      margin: 8px 0;
+    }
+
+    footer {
+      background: #1565c0;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(-100px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <h1>🌤️ Weather Forecast</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="weather.html">Weather</a>
+      <a href="farmer.php">Farmer Info</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Search Weather by City</h2>
+    <input type="text" id="city" placeholder="Enter city name" />
+    <button onclick="searchCityWeather()">Search</button>
+    <div id="cityWeather"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Krishi Mitra | <a href="privacy.html" style="color: #fff;">Privacy Policy</a> | <a href="terms.html"
+        style="color: #fff;">Terms</a></p>
+  </footer>
+
+  <!-- ✅ Weather Script + Sound -->
+  <script>
+    const sound = new Audio("https://cdn.pixabay.com/download/audio/2022/10/06/audio_a4009e88b2.mp3?filename=soft-notification-140881.mp3");
+
+    function searchCityWeather() {
+      const city = document.getElementById("city").value.trim();
+      if (!city) {
+        alert("Please enter a city name.");
+        return;
+      }
+
+      const apiKey = "f3d7e36d85ecbece83df17d7e9b864a9"; // Replace this with your real OpenWeather API key
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+      fetch(url)
+        .then(res => {
+          if (!res.ok) throw new Error("City not found");
+          return res.json();
+        })
+        .then(data => {
+          sound.play();
+          document.getElementById("cityWeather").innerHTML = `
+            <img src="https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png" alt="weather icon" />
+            <h3>${data.name}</h3>
+            <p><strong>${data.weather[0].main}</strong> - ${data.weather[0].description}</p>
+            <p>Temperature: <strong>${data.main.temp} °C</strong></p>
+            <p>Humidity: ${data.main.humidity}% | Wind: ${data.wind.speed} m/s</p>
+          `;
+        })
+        .catch(err => {
+          document.getElementById("cityWeather").innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+        });
+    }
+  </script>
+</body>
+
+</html>

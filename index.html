@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krishi Mitra - Home</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #e8f5e9, #f1f8e9);
+      padding: 20px;
+    }
+
+    header {
+      background-color: #388e3c;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav a {
+      margin: 0 12px;
+      color: white;
+      font-size: 20px;
+      transition: transform 0.3s;
+    }
+
+    nav a:hover {
+      transform: scale(1.2);
+      color: yellow;
+    }
+
+    section {
+      padding: 20px;
+    }
+
+    .welcome-box {
+      text-align: center;
+      padding: 30px;
+      background: #ffffff;
+      box-shadow: 0 4px 10px rgba(0, 128, 0, 0.2);
+      border-radius: 20px;
+      margin-bottom: 40px;
+      animation: slideIn 1s ease-in-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .img-card {
+      border-radius: 15px;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+      margin-bottom: 20px;
+    }
+
+    .img-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0, 128, 0, 0.3);
+    }
+
+    .img-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .col-12, .col-md-6 {
+      flex: 1 1 100%;
+    }
+
+    @media(min-width: 768px) {
+      .col-md-6 {
+        flex: 1 1 calc(50% - 20px);
+      }
+    }
+
+    .weather-block,
+    .market-block,
+    .login-block {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+    }
+
+    #icon {
+      font-size: 50px;
+    }
+
+    .login-block button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      color: white;
+      font-size: 16px;
+      background: linear-gradient(to right, #43cea2, #185a9d);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+
+    .login-block button:hover {
+      transform: scale(1.1);
+      background: linear-gradient(to right, #ff6a00, #ee0979);
+    }
+
+    footer {
+      background: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      margin-top: 30px;
+    }
+
+    iframe {
+      border: none;
+    }
+
+    .animated-result {
+      background: linear-gradient(135deg, #e3ffe7 0%, #d9e7ff 100%);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+
+  <script defer>
+    window.onload = function () {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showWeather);
+      }
+
+      function showWeather(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        const apiKey = 'f3d7e36d85ecbece83df17d7e9b864a9';
+
+        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`)
+          .then(res => res.json())
+          .then(data => {
+            const temp = data.main.temp + "°C";
+            const desc = data.weather[0].description;
+            const iconCode = data.weather[0].icon;
+            const iconURL = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+            document.getElementById("icon").innerHTML = `<img src="${iconURL}" alt="icon">`;
+            document.getElementById("temp").textContent = "Temperature: " + temp;
+            document.getElementById("desc").textContent = "Condition: " + desc;
+          })
+          .catch(err => {
+            document.getElementById("currentWeather").innerHTML = "<p>Weather info not available.</p>";
+          });
+      }
+    }
+
+    function showSlideUp(role) {
+      const div = document.getElementById("slideUpForm");
+      div.innerHTML = `
+        <form action="login_process.php" method="post">
+          <h3>${role === 'farmer' ? 'Farmer Login' : 'Weather Officer Login'}</h3>
+          <input type="hidden" name="role" value="${role}" />
+          <input type="text" name="username" placeholder="Username" required /><br><br>
+          <input type="password" name="password" placeholder="Password" required /><br><br>
+          <button type="submit" style="background:#4caf50;color:white;padding:10px;border:none;border-radius:5px;">Login</button>
+        </form>
+      `;
+      div.scrollIntoView({ behavior: "smooth" });
+    }
+
+    function searchMarketRates() {
+      const city = document.getElementById("marketCity").value.trim();
+      const result = document.getElementById("marketResult");
+      if (city) {
+        result.innerHTML = `
+          <div class="animated-result">
+            <p><strong>${city}</strong> market info is being fetched...<br>
+            Open <a href="https://agmarknet.gov.in/SearchCmmMkt.aspx" target="_blank">Agmarknet Market Search</a> to view detailed prices.</p>
+          </div>
+        `;
+      } else {
+        result.innerHTML = `<p style='color:red;'>Please enter a city or market yard name.</p>`;
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <header>
+    <h1>🌾 Krishi Mitra</h1>
+    <nav>
+      <a href="#home" title="Home"><i class="fas fa-home"></i></a>
+      <a href="weather.html" title="Weather"><i class="fas fa-cloud-sun"></i></a>
+      <a href="farmer.php" title="Farmer Info"><i class="fas fa-tractor"></i></a>
+      <a href="login.html" title="Login"><i class="fas fa-user"></i></a>
+      <a href="contact.php" title="Contact us"><i class="fas fa-envelope"></i></a>
+      <a href="Admin panel.php" title="Dashboard"><i class="fas fa-user-shield"></i></a>
+      <a href="sell_weather.php" title="Crop & Weather Store"><i class="fas fa-warehouse"></i></a>
+    </nav>
+  </header>
+
+  <section id="home">
+    <div class="welcome-box">
+      <h2>🙏 આપનું સ્વાગત છે</h2>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <!-- Optimized images with lazy loading -->
+        <div class="col-md-6">
+          <div class="img-card">
+            <img src="images/ki.jpeg" alt="Crop 1" loading="lazy">
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="img-card">
+            <img src="images/ch.jpeg" alt="Crop 2" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="img-card">
+            <img src="images/th (1).jpeg" alt="Weather" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="weather-block" id="currentWeather">
+      <h3>Current Weather at Your Location</h3>
+      <div id="icon"></div>
+      <div id="temp"></div>
+      <div id="desc"></div>
+    </div>
+
+    <div class="market-block">
+      <h3>Live Market Rates</h3>
+      <div id="marketResult"></div>
+      <form onsubmit="event.preventDefault(); searchMarketRates();">
+        <input type="text" id="marketCity" placeholder="Enter City or Market Yard Name"
+          style="padding:10px; width:70%;">
+        <button type="submit" style="padding:10px; background:#4caf50; color:white; border:none;">Search</button>
+      </form>
+      <p>If the site is blocked, please visit <a href="https://agmarknet.gov.in" target="_blank">agmarknet.gov.in</a>
+        directly.</p>
+    </div>
+
+    <div class="login-block">
+      <h3>Login</h3>
+      <button onclick="showSlideUp('farmer')">Farmer</button>
+      <button onclick="showSlideUp('weather')">Weather Officer</button>
+    </div>
+
+    <div id="slideUpForm" style="padding:20px;"></div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Krishi Mitra | <a href="privacy.html" style="color:white;">Privacy Policy</a> | <a href="terms.html"
+        style="color:white;">Terms & Conditions</a></p>
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Krishi Mitra Login</title>
+
+  <style>
+    @media (max-width: 1024px) {
+      form {
+        padding: 18px;
+      }
+
+      form input,
+      form select,
+      form textarea {
+        font-size: 16px;
+      }
+
+      header,
+      footer {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      header,
+      footer {
+        font-size: 16px;
+        padding: 10px;
+      }
+
+      form {
+        padding: 16px;
+        margin: 20px;
+      }
+
+      form input,
+      form select,
+      form textarea {
+        font-size: 15px;
+      }
+
+      form button {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      header,
+      footer {
+        font-size: 15px;
+        padding: 8px;
+      }
+
+      nav a {
+        display: block;
+        margin: 5px 0;
+        font-size: 14px;
+      }
+
+      form {
+        padding: 12px;
+        margin: 15px;
+      }
+
+      form input,
+      form select,
+      form textarea {
+        font-size: 14px;
+        padding: 8px;
+      }
+
+      form button {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial;
+      background-size: cover;
+      background-position: center;
+      transition: background 0.5s ease;
+    }
+
+    header {
+      background-color: #388e3c;
+      padding: 15px;
+      color: white;
+      text-align: center;
+    }
+
+    nav a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: white;
+    }
+
+    footer {
+      background: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+
+    form {
+      max-width: 600px;
+      margin: 30px auto;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    form input,
+    form select,
+    form textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+    }
+
+    form button {
+      background: #2e7d32;
+      color: white;
+      padding: 10px;
+      border: none;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    footer {
+      background-color: #2e7d32;
+      color: white;
+      text-align: center;
+      padding: 15px;
+    }
+  </style>
+</head>
+
+<body id="body">
+
+  <header>
+    <h1>Login to Krishi Mitra</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="weather.html">Weather</a>
+      <a href="farmer.php">Farmer Info</a>
+      <a href="login.html">Login</a>
+    </nav>
+  </header>
+
+  <section>
+    <form action="submit.php" method="post" id="loginForm">
+      <h2>Select Role</h2>
+      <select name="role" id="roleSelect" required>
+        <option value="">--Select Role--</option>
+        <option value="farmer">Farmer</option>
+        <option value="weatherman">Weather Officer</option>
+      </select>
+
+      <div id="formFields"></div>
+
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Krishi Mitra | <a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms</a></p>
+  </footer>
+
+  <script>
+    const stateCities = {
+      "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Junagadh", "Gandhinagar"],
+      "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad"],
+      "Rajasthan": ["Jaipur", "Udaipur", "Jodhpur", "Ajmer", "Bikaner"],
+      "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Agra", "Noida", "Meerut"],
+      "Madhya Pradesh": ["Bhopal", "Indore", "Jabalpur", "Gwalior"],
+      "Bihar": ["Patna", "Gaya", "Bhagalpur"],
+      "Karnataka": ["Bengaluru", "Mysuru", "Mangaluru", "Hubli"],
+      "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Salem"],
+      "Kerala": ["Thiruvananthapuram", "Kochi", "Kozhikode", "Thrissur"],
+      "Andhra Pradesh": ["Vijayawada", "Visakhapatnam", "Guntur", "Tirupati"],
+      "Telangana": ["Hyderabad", "Warangal", "Nizamabad"],
+      "Punjab": ["Amritsar", "Ludhiana", "Jalandhar", "Patiala"],
+      "Haryana": ["Gurgaon", "Faridabad", "Panipat", "Ambala"],
+      "West Bengal": ["Kolkata", "Howrah", "Durgapur", "Siliguri"],
+      "Odisha": ["Bhubaneswar", "Cuttack", "Rourkela"],
+      "Assam": ["Guwahati", "Silchar", "Dibrugarh"],
+      "Jharkhand": ["Ranchi", "Jamshedpur", "Dhanbad"],
+      "Chhattisgarh": ["Raipur", "Bilaspur", "Durg"],
+      "Himachal Pradesh": ["Shimla", "Dharamshala"],
+      "Uttarakhand": ["Dehradun", "Haridwar", "Nainital"],
+      "Goa": ["Panaji", "Margao"],
+      "Tripura": ["Agartala"],
+      "Meghalaya": ["Shillong"],
+      "Manipur": ["Imphal"],
+      "Mizoram": ["Aizawl"],
+      "Nagaland": ["Kohima"],
+      "Arunachal Pradesh": ["Itanagar"],
+      "Sikkim": ["Gangtok"],
+      "Delhi": ["New Delhi", "Dwarka", "Rohini", "Karol Bagh"],
+      "Jammu & Kashmir": ["Srinagar", "Jammu"],
+      "Ladakh": ["Leh", "Kargil"],
+      "Chandigarh": ["Chandigarh"],
+      "Puducherry": ["Puducherry"],
+      "Andaman & Nicobar": ["Port Blair"],
+      "Dadra & Nagar Haveli and Daman & Diu": ["Daman", "Silvassa"],
+      "Lakshadweep": ["Kavaratti"]
+    };
+
+    document.getElementById('roleSelect').addEventListener('change', function () {
+      const role = this.value;
+      const fields = document.getElementById('formFields');
+      const body = document.getElementById('body');
+      fields.innerHTML = "";
+
+      if (role === "farmer") {
+        body.style.backgroundImage = "url('images/farmer-bg.jpg')";
+        fields.innerHTML = `
+          <input name="first_name" type="text" placeholder="First Name" required>
+          <input name="middle_name" type="text" placeholder="Middle Name">
+          <input name="last_name" type="text" placeholder="Last Name" required>
+          <input name="age" type="number" placeholder="Age" required>
+          <input name="village" type="text" placeholder="Village" required>
+          <select name="state" id="stateDropdown" required onchange="loadCities(this.value)">
+            <option value="">Select State</option>
+            ${Object.keys(stateCities).map(state => `<option value="${state}">${state}</option>`).join('')}
+          </select>
+          <select name="district" id="cityDropdown" required>
+            <option value="">Select City/District</option>
+          </select>
+          <textarea name="address" placeholder="Full Address" required></textarea>
+          <input name="farm_index" type="text" placeholder="Farm Index Number" required>
+          <input name="survey_no" type="text" placeholder="Survey Number" required>
+          <input name="ac_no" type="text" placeholder="Account Number" required>
+          <input name="email" type="email" placeholder="Email" required>
+          <input name="mobile" type="tel" placeholder="Mobile Number" required>
+        `;
+      } else if (role === "weatherman") {
+        body.style.backgroundImage = "url('images/weather-bg.jpg')";
+        fields.innerHTML = `
+          <input name="full_name" type="text" placeholder="Full Name" required>
+          <input name="age" type="number" placeholder="Age" required>
+          <input name="id_no" type="text" placeholder="ID Number" required>
+          <select name="officer_type" required>
+            <option value="">Select Officer Type</option>
+            <option value="Individual">Individual</option>
+            <option value="Community">Community</option>
+          </select>
+          <textarea name="address" placeholder="Address" required></textarea>
+          <input name="email" type="email" placeholder="Email" required>
+          <input name="mobile" type="tel" placeholder="Mobile Number" required>
+        `;
+      }
+    });
+
+    function loadCities(state) {
+      const cityDropdown = document.getElementById('cityDropdown');
+      cityDropdown.innerHTML = `<option value="">Select City/District</option>`;
+      if (stateCities[state]) {
+        stateCities[state].forEach(city => {
+          cityDropdown.innerHTML += `<option value="${city}">${city}</option>`;
+        });
+      }
+    }
+  </script>
+</body>
+
+</html>
